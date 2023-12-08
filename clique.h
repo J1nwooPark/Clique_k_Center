@@ -85,12 +85,12 @@ class CliqueCenter {
      }
      int NEXT(int idx) {
         int next_idx = idx + 1;
-        while (isBetween(intervals[idx].second, intervals[next_idx % vertex_num].first, intervals[next_idx % vertex_num].second) == false) {
+        while (isBetween(intervals[idx].second, intervals[next_idx % intervals.size()].first, intervals[next_idx % intervals.size()].second) == false) {
             next_idx++;
-            if (next_idx % vertex_num == idx)
+            if (next_idx % intervals.size() == idx)
                 return idx;
         }
-        return next_idx % vertex_num;
+        return next_idx % intervals.size();
      }
      void GREEDY() {
         //1. Set L[i] = 0, for each arc i in F. Arbitrarily select an arc i in F;
@@ -124,8 +124,8 @@ class CliqueCenter {
             std::vector<int> LQ;
             LQ.push_back(i);
             int idx = i + 1;
-            while (isBetween(intervals[idx].first, intervals[i].second, intervals[idx].second))
-                LQ.push_back(idx++);
+            while (isBetween(intervals[idx % intervals.size()].first, intervals[i].second, intervals[idx % intervals.size()].second))
+                LQ.push_back(idx++ % intervals.size());
             LQs.push_back(LQ);
         }
      }
@@ -158,12 +158,9 @@ class CliqueCenter {
             std::pair<double, double> range = getOverlap(LQ);
             double _center = (range.first + range.second) / 2;
             center.push_back(_center);
-            for (int i = 0; i < vertex_num; i++) {
-                if (isBetween(loc[i], _center, loc[(i + 1) % vertex_num])) {
-                    center_loc.push_back({i, (i + 1) % vertex_num});
-                    break;
-                }
-            }
+            auto itr = std::lower_bound(loc.begin(), loc.end(), _center);
+            int idx = itr - loc.begin();
+            center_loc.push_back({idx - 1, idx % vertex_num}); 
         }
      }
      void getCenter() {
