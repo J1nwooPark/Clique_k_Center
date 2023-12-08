@@ -76,9 +76,12 @@ class CliqueCenter {
         for (int i = 0; i < vertex_num; i++) {
             double left_end = std::max(loc[i] - radius / weight[i], loc[i] - perimeter / 2);
             double right_end = std::min(loc[i] + radius / weight[i], loc[i] + perimeter / 2);
+            if (!intervals.empty() && left_end < intervals.back().first)
+                continue;
+            while (!intervals.empty() && right_end < intervals.back().second)
+                intervals.pop_back();
             intervals.push_back({left_end, right_end});
         }
-        std::sort(intervals.begin(), intervals.end()); // O(nlogn)
      }
      int NEXT(int idx) {
         int next_idx = idx + 1;
