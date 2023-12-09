@@ -151,15 +151,19 @@ class CliqueCenter {
                 }
             }
         }
-        return overlaps[0];
+        if (overlaps.size() == 1) return overlaps[0];
+        else return std::make_pair(std::max(overlaps[0].first, overlaps[1].first),
+                                   std::min(overlaps[0].second, overlaps[1].second));
      }
      void FindCenterLoc() {
+        auto vertex_itr = loc.begin();
         for (auto LQ: LQs) {
             std::pair<double, double> range = getOverlap(LQ);
             double _center = (range.first + range.second) / 2;
             center.push_back(_center);
-            auto itr = std::lower_bound(loc.begin(), loc.end(), _center);
-            int idx = itr - loc.begin();
+            while (vertex_itr != loc.end() && *vertex_itr < _center)
+                vertex_itr++;
+            int idx = vertex_itr - loc.begin();
             center_loc.push_back({idx - 1, idx % vertex_num}); 
         }
      }
