@@ -12,7 +12,7 @@ class CliqueCenter {
      int k;
      std::vector<double> weight; // index starts from 0.
      std::vector<double> edge; // edge[i] means the length of v_i to v_((i + 1) % vertex_num).
-     std::vector<double> loc; // location of v_i on circle starting form v_0 as 0.
+     std::vector<double> loc; // location of v_i on circle starting from v_0 as 0.
     private:
      double perimeter;
      std::vector<double> center;
